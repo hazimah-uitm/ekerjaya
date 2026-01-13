@@ -17,13 +17,90 @@ Route::get('/', function () {
     return view('frontend.index');
 })->name('main');
 
+Route::get('/dashboard', function () {
+    return view('frontend.pages.dashboard');
+})->name('dashboard');
+
+Route::get('/permohonan-saya', function () {
+    return view('frontend.pages.applications-index');
+})->name('applications.index');
+
+Route::get('/profil', function () {
+    return view('frontend.pages.profile-complete'); // untuk edit profil (prototaip guna form sama)
+})->name('profile.frontend');
+
+Route::get('/resume/pdf', function () {
+    return view('frontend.pages.resume-pdf'); // sementara placeholder dulu
+})->name('resume.pdf');
+
 Route::get('/jobs', function () {
     return view('frontend.pages.job-list');
 })->name('jobs');
 
-Route::get('/job/{id}', function ($id) {
-    return view('frontend.pages.detail');
+Route::get('/jawatan/{slug}', function ($slug) {
+    return view('frontend.pages.job-detail', [
+        'slug' => $slug
+    ]);
 })->name('job.detail');
+
+Route::get('/jawatan/{slug}/mohon', function ($slug) {
+
+    // 1. Belum login
+    if (!session()->has('user')) {
+        session(['redirect_after_login' => url()->current()]);
+        return redirect()->route('login');
+    }
+
+    // 2. Profil belum lengkap
+    if (empty(session('user.profile_complete'))) {
+        session(['redirect_after_profile' => url()->current()]);
+        return redirect()->route('profile.complete');
+    }
+
+    // 3. Terus SUBMIT permohonan (session)
+    $applications = session('applications', []);
+
+    $applications[] = [
+        'jawatan' => ucwords(str_replace('-', ' ', $slug)),
+        'tarikh_mohon' => now()->format('d/m/Y'),
+        'status' => 'Dihantar'
+    ];
+
+    session(['applications' => $applications]);
+
+    return redirect()->route('applications.index')
+        ->with('success', 'Permohonan jawatan berjaya dihantar.');
+})->name('job.apply');
+
+Route::get('/profil/lengkap', function () {
+    return view('frontend.pages.profile-complete');
+})->name('profile.complete');
+
+Route::post('/profil/lengkap', function (\Illuminate\Http\Request $request) {
+
+    // Simpan data resume dalam session (prototaip)
+    session(['resume' => $request->all()]);
+
+    // Set profile_complete = true pada session user
+    $user = session('user', []);
+    $user['profile_complete'] = true;
+    session(['user' => $user]);
+
+    // Balik ke tempat asal (contoh: /jawatan/{slug}/mohon)
+    if (session()->has('redirect_after_profile')) {
+        $url = session('redirect_after_profile');
+        session()->forget('redirect_after_profile');
+        return redirect($url)->with('success', 'Profil berjaya dilengkapkan.');
+    }
+
+    return redirect()->route('main')->with('success', 'Profil berjaya dilengkapkan.');
+})->name('profile.complete.submit');
+
+
+Route::get('/permohonan-saya', function () {
+    return view('frontend.pages.applications-index');
+})->name('applications.index');
+
 
 Route::get('/category', function () {
     return view('frontend.pages.category');

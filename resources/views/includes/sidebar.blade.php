@@ -3,17 +3,22 @@
         <img src="{{ asset('public/assets/images/logo-icon.png') }}" class="logo-icon" alt="logo icon">
     </div>
     <div>
-        <h4 class="logo-text">MAIN</h4>
-        <h6 class="logo-subtitle">Template System</h6>
+        <h4 class="logo-text">eKERJAYA</h4>
     </div>
     <div class="toggle-icon ms-auto" id="toggle-icon"><i class='bx bx-arrow-to-left'></i></div>
 </div>
 
 <!--navigation-->
 <ul class="metismenu" id="menu">
+    <li class="{{ Request::routeIs('main') ? 'mm-active' : '' }}">
+        <a href="{{ route('main') }}">
+            <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
+            <div class="menu-title">Utama</div>
+        </a>
+    </li>
     <li class="{{ Request::routeIs('home') ? 'mm-active' : '' }}">
         <a href="{{ route('home') }}">
-            <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
+            <div class="parent-icon"><i class='bx bxs-dashboard'></i></div>
             <div class="menu-title">Dashboard</div>
         </a>
     </li>

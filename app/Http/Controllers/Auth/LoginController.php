@@ -53,8 +53,51 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        return redirect()->route('home')->with('success', 'Anda telah berjaya log masuk!');
+        // Spatie: check role
+        $isSeeker = $user->hasRole('Pencari Kerja');
+
+        $isBackoffice = $user->hasAnyRole(['Admin', 'Superadmin', 'Super Admin', 'Majikan']);
+
+        // Untuk navbar (prototaip): simpan roleKey ringkas
+        if ($isSeeker) {
+            $roleKey = 'pencari_kerja';
+        } elseif ($user->hasRole('Majikan')) {
+            $roleKey = 'majikan';
+        } elseif ($user->hasRole('Admin')) {
+            $roleKey = 'admin';
+        } elseif ($user->hasRole('Superadmin') || $user->hasRole('Super Admin')) {
+            $roleKey = 'super_admin';
+        } else {
+            // fallback: ambil role pertama spatie untuk debug
+            $first = $user->getRoleNames()->first(); // Collection
+            $roleKey = $first ? strtolower(str_replace(' ', '_', $first)) : 'unknown';
+        }
+
+        session([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'role' => $roleKey,
+                'profile_complete' => (bool) ($user->profile_complete ?? false),
+            ]
+        ]);
+
+        // Redirect
+        if ($isSeeker) {
+            return redirect()->intended(route('main'))
+                ->with('success', 'Anda telah berjaya log masuk!');
+        }
+
+        if ($isBackoffice) {
+            return redirect()->route('home')
+                ->with('success', 'Anda telah berjaya log masuk!');
+        }
+
+        // Kalau tak termasuk mana-mana, hantar ke main supaya tak rosak demo
+        return redirect()->intended(route('main'))
+            ->with('success', 'Anda telah berjaya log masuk!');
     }
+
 
     public function logout(Request $request)
     {

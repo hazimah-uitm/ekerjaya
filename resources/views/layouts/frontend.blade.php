@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>JobEntry - Job Portal Website Template</title>
+    <title>eKerjaya</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -47,29 +47,83 @@
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
             <a href="{{ route('main') }}" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
-                <h1 class="m-0 text-primary">JobEntry</h1>
+                <h1 class="m-0 text-primary">eKerjaya</h1>
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse"
                 data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            @php
+                $isSeeker = auth()->check() && auth()->user()->hasRole('Pencari Kerja');
+                $isBackoffice =
+                    auth()->check() &&
+                    auth()
+                        ->user()
+                        ->hasAnyRole(['Admin', 'Superadmin', 'Super Admin', 'Majikan']);
+            @endphp
+
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
-                    <a href="{{ route('main') }}" class="nav-item nav-link active">Home</a>
-                    <a href="{{ route('about') }}" class="nav-item nav-link">About</a>
-                    <a href="{{ route('jobs') }}" class="nav-item nav-link">Job List</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu rounded-0 m-0">
-                            <a href="{{ route('category') }}" class="dropdown-item">Job Category</a>
-                            <a href="{{ route('testimonial') }}" class="dropdown-item">Testimonial</a>
-                            <a href="{{ route('404') }}" class="dropdown-item">404</a>
+                    <a href="{{ route('main') }}"
+                        class="nav-item nav-link {{ request()->routeIs('main') ? 'active' : '' }}">Utama</a>
+                    <a href="{{ route('about') }}"
+                        class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">Tips Kerjaya</a>
+                    <a href="{{ route('jobs') }}"
+                        class="nav-item nav-link {{ request()->routeIs('jobs') ? 'active' : '' }}">Jawatan Kosong</a>
+                    <a href="{{ route('contact') }}"
+                        class="nav-item nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">Hubungi Kami</a>
+                </div>
+
+                {{-- BUTANG KANAN --}}
+                @if (!session()->has('user'))
+                    <div class="d-flex align-items-center d-none d-lg-flex ms-3">
+                        <a href="{{ route('register') }}" class="btn btn-secondary rounded-0 py-4 px-lg-4">
+                            Daftar
+                        </a>
+                        <a href="{{ route('login') }}" class="btn btn-primary rounded-0 py-4 px-lg-4">
+                            Log Masuk
+                        </a>
+                    </div>
+                @else
+                    <div class="d-flex align-items-center d-none d-lg-flex ms-3">
+                        <div class="dropdown">
+                            <a href="#" class="btn btn-light border rounded-0 py-4 px-lg-4 dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user-circle text-primary me-2"></i>
+                                {{ session('user.name') ?? (auth()->user()->name ?? 'Pengguna') }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end rounded-0">
+                                @if ($isSeeker)
+                                    <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('applications.index') }}">Permohonan
+                                            Saya</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('profile.frontend') }}">Profil Saya</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('resume.pdf') }}">Resume (PDF)</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                @endif
+
+                                @if ($isBackoffice)
+                                    <li><a class="dropdown-item" href="{{ route('home') }}">Admin / Majikan</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                @endif
+
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            Log Keluar
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <a href="{{ route('contact') }}" class="nav-item nav-link">Contact</a>
-                </div>
-                <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Post A Job<i
-                        class="fa fa-arrow-right ms-3"></i></a>
+                @endif
             </div>
         </nav>
         <!-- Navbar End -->
@@ -79,8 +133,8 @@
 
 
         <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-            <div class="container py-5">
+        <div class="container-fluid bg-dark text-white-50 footer wow fadeIn" data-wow-delay="0.1s">
+            {{-- <div class="container py-5">
                 <div class="row g-5">
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Company</h5>
@@ -125,34 +179,23 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="container">
                 <div class="copyright">
                     <div class="row">
-                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
-
-                            <!--/*** The author’s attribution link must remain intact in the template. ***/-->
-                            <!--/*** If you wish to remove this credit link, please purchase the Pro Version . ***/-->
-                            Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
-                        </div>
-                        <div class="col-md-6 text-center text-md-end">
-                            <div class="footer-menu">
-                                <a href="">Home</a>
-                                <a href="">Cookies</a>
-                                <a href="">Help</a>
-                                <a href="">FQAs</a>
-                            </div>
+                        <div class="col-md-12 text-center mb-3 mb-md-0">
+                            &copy; 2026 <a class="border-bottom" href="#">UiTM Cawangan Sarawak</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Footer End -->
+    </div>
+    <!-- Footer End -->
 
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
