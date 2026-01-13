@@ -24,12 +24,12 @@ class RoleSeeder extends Seeder
                 'guard_name' => 'web',
             ],
             [
-                'name' => 'Pegawai Penyemak',
+                'name' => 'Majikan',
                 'publish_status' => true,
                 'guard_name' => 'web',
             ],
             [
-                'name' => 'Pemilik',
+                'name' => 'Pencari Kerja',
                 'publish_status' => true,
                 'guard_name' => 'web',
             ],

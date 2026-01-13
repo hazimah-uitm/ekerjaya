@@ -41,11 +41,13 @@
                     </div>
                 </form>
             </div>
+            @can('Padam Pengguna')
             <div class="ms-auto">
                 <a href="{{ route('user.create') }}" class="btn btn-primary radius-30 mt-2 mt-lg-0">
                     <i class="bx bxs-plus-square"></i> Tambah Pengguna
                 </a>
             </div>
+            @endcan
         </div>
         <div class="table-responsive">
             <table class="table">
@@ -53,9 +55,7 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>No. Staf</th>
-                        <th>Kampus</th>
-                        <th>Peranan</th>
+                        <th>Peranan Pengguna</th>
                         <th>Status</th>
                         <th>Tindakan</th>
                     </tr>
@@ -66,8 +66,6 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ ucfirst($user->name) }}</td>
-                        <td>{{ $user->staff_id }}</td>
-                        <td>{{ $user->campus->name }}</td>
                         <td>
                             @if ($user->roles->count() === 1)
                             {{ ucwords(str_replace('-', ' ', $user->roles->first()->name)) }}
@@ -87,20 +85,24 @@
                             @endif
                         </td>
                         <td>
+                            @role('Superadmin')
                             <a href="{{ route('user.edit', $user->id) }}" class="btn btn-info btn-sm"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="Kemaskini">
                                 <i class="bx bxs-edit"></i>
                             </a>
+                            @endrole
                             <a href="{{ route('user.show', $user->id) }}" class="btn btn-primary btn-sm"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="Papar">
                                 <i class="bx bx-show"></i>
                             </a>
+                            @can('Padam Pengguna')
                             <a type="button" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                 data-bs-title="Padam">
                                 <span class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal{{ $user->id }}"><i
                                         class="bx bx-trash"></i></span>
                             </a>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach

@@ -13,11 +13,11 @@
             </ol>
         </nav>
     </div>
-    <div class="ms-auto">
+    {{-- <div class="ms-auto">
         <a href="{{ route('user.edit', $user->id) }}">
             <button type="button" class="btn btn-primary mt-2 mt-lg-0">Kemaskini Maklumat</button>
         </a>
-    </div>
+    </div> --}}
 </div>
 <!-- End Breadcrumb -->
 
@@ -31,42 +31,12 @@
             <div class="card-body">
                 <table class="table table-borderless">
                     <tr>
-                        <th>Nama Penuh</th>
-                        <td>{{ ucfirst($user->name) }}</td>
-                    </tr>
-                    <tr>
-                        <th>ID Pekerja</th>
-                        <td>{{ $user->staff_id }}</td>
-                    </tr>
-                    <tr>
-                        <th>Jawatan</th>
-                        <td>{{ $user->position->title }} ({{ $user->position->grade }})</td>
+                        <th width="30%">Nama Penuh</th>
+                        <td>{{ $user->name }}</td>
                     </tr>
                     <tr>
                         <th>Alamat Emel</th>
                         <td>{{ $user->email }}</td>
-                    </tr>
-                    <tr>
-                        <th>No. Telefon Pejabat</th>
-                        <td>{{ $user->office_phone_no }}</td>
-                    </tr>
-                    <tr>
-                        <th>Kampus</th>
-                        <td>{{ $user->campus->name }}</td>
-                    </tr>
-                    <tr>
-                        <th>Peranan</th>
-                        <td>
-                            @if ($user->roles->count() === 1)
-                            {{ ucwords(str_replace('-', ' ', $user->roles->first()->name)) }}
-                            @else
-                            <ul>
-                                @foreach ($user->roles as $role)
-                                <li>{{ ucwords(str_replace('-', ' ', $role->name)) }}</li>
-                                @endforeach
-                            </ul>
-                            @endif
-                        </td>
                     </tr>
                     <tr>
                         <th>Status</th>

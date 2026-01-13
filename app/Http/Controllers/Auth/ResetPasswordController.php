@@ -40,20 +40,20 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
-protected function resetPassword($user, $password)
+    protected function resetPassword($user, $password)
     {
         $user = User::find($user->id);
         $user->password = bcrypt($password);
-    
+        $user->remember_token = Str::random(60);
+
+        // Tandakan sebagai verified jika belum
         if (is_null($user->email_verified_at)) {
             $user->email_verified_at = now();
         }
-    
-        $user->remember_token = Str::random(60);
+
         $user->save();
-    
         // Redirect to login page with a success message
-        return redirect()->route('login')->with('success', 'Kata laluan telah berjaya di set. Sila log masuk menggunakan No. Pekerja dan Kata Laluan.');
+        return redirect()->route('login')->with('success', 'Kata laluan telah berjaya di set. Sila log masuk menggunakan Emel dan Kata Laluan.');
     }
 
     public function showResetForm(Request $request, $token = null)

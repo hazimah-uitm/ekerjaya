@@ -14,13 +14,48 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.login');
-});
+    return view('frontend.index');
+})->name('main');
+
+Route::get('/jobs', function () {
+    return view('frontend.pages.job-list');
+})->name('jobs');
+
+Route::get('/job/{id}', function ($id) {
+    return view('frontend.pages.detail');
+})->name('job.detail');
+
+Route::get('/category', function () {
+    return view('frontend.pages.category');
+})->name('category');
+
+Route::get('/testimonial', function () {
+    return view('frontend.pages.testimonial');
+})->name('testimonial');
+
+Route::get('/about', function () {
+    return view('frontend.pages.about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('frontend.pages.contact');
+})->name('contact');
+
+Route::get('/404', function () {
+    return view('frontend.pages.404');
+})->name('404');
+
 
 // Login & logout function
 Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/first-time-login', 'Auth\LoginController@showForm')->name('firsttimelogin.form');
+Route::post('/first-time-login', 'Auth\LoginController@sendLink')->name('firsttimelogin.send');
+
+Route::get('register', 'UserController@showPublicRegisterForm')->name('register');
+Route::post('register', 'UserController@storePublicRegister')->name('register.store');
+Route::get('/verify-email/{token}', 'UserController@verifyEmail')->name('verify.email');
 
 // Password Reset Routes
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
