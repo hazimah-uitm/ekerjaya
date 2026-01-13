@@ -18,20 +18,32 @@ Route::get('/', function () {
 })->name('main');
 
 Route::get('/dashboard', function () {
+    if (!session()->has('user') || session('user.role') !== 'pencari_kerja') {
+        return redirect()->route('main');
+    }
     return view('frontend.pages.dashboard');
-})->name('dashboard');
+})->name('dashboard.frontend');
 
 Route::get('/permohonan-saya', function () {
     return view('frontend.pages.applications-index');
 })->name('applications.index');
 
 Route::get('/profil', function () {
+    if (!session()->has('user') || session('user.role') !== 'pencari_kerja') {
+        return redirect()->route('main');
+    }
+    return view('frontend.pages.profile');
+})->name('profile.view');
+
+Route::get('/profil-edit', function () {
     return view('frontend.pages.profile-complete'); // untuk edit profil (prototaip guna form sama)
 })->name('profile.frontend');
 
 Route::get('/resume/pdf', function () {
-    return view('frontend.pages.resume-pdf'); // sementara placeholder dulu
+    return view('frontend.pages.resume_pdf'); // sementara placeholder dulu
 })->name('resume.pdf');
+
+Route::get('/resume/pdf', 'ResumeController@pdf')->name('resume.pdf');
 
 Route::get('/jobs', function () {
     return view('frontend.pages.job-list');
@@ -141,6 +153,36 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/majikan/profil', 'EmployerProfileController@show')
+        ->name('majikan.profile.show');
+
+    Route::get('/majikan/profil/edit', 'EmployerProfileController@edit')
+        ->name('majikan.profile.edit');
+
+    Route::post('/majikan/profil', 'EmployerProfileController@update')
+        ->name('majikan.profile.update');
+
+    Route::get('/majikan/jawatan', 'EmployerVacancyController@index')
+        ->name('majikan.vacancy.index');
+
+    Route::get('/majikan/jawatan/create', 'EmployerVacancyController@create')
+        ->name('majikan.vacancy.create');
+
+    Route::post('/majikan/jawatan', 'EmployerVacancyController@store')
+        ->name('majikan.vacancy.store');
+
+    Route::get('/majikan/jawatan/{id}', 'EmployerVacancyController@show')
+        ->name('majikan.vacancy.show');
+
+    Route::get('vacancy/{id}/edit', 'EmployerVacancyController@edit')->name('majikan.vacancy.edit');
+
+    Route::get('majikan/permohonan', 'ApplicationController@index')
+    ->name('majikan.application.index');
+
+    Route::get('majikan/dashboard', 'EmployerDashboardController@index')
+    ->name('majikan.dashboard');
+
 
     //Campus
     Route::get('campus', 'CampusController@index')->name('campus');

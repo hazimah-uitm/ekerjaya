@@ -94,12 +94,11 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end rounded-0">
                                 @if ($isSeeker)
-                                    <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('dashboard.frontend') }}">Dashboard</a></li>
                                     <li><a class="dropdown-item" href="{{ route('applications.index') }}">Permohonan
                                             Saya</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('profile.frontend') }}">Profil Saya</a>
+                                    <li><a class="dropdown-item" href="{{ route('profile.view') }}">Profil Saya</a>
                                     </li>
-                                    <li><a class="dropdown-item" href="{{ route('resume.pdf') }}">Resume (PDF)</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>

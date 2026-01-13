@@ -21,6 +21,13 @@ class UserSeeder extends Seeder
                 'publish_status' => true,
                 'email_verified_at' => now(), 
             ],
+            [
+                'name' => 'Sara Jane',
+                'email' => 'goodsane@gmail.com',
+                'password' => Hash::make('hazimah123'),
+                'publish_status' => true,
+                'email_verified_at' => now(), 
+            ],
         ]);
     }
 }
