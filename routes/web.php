@@ -178,11 +178,23 @@ Route::middleware('auth')->group(function () {
     Route::get('vacancy/{id}/edit', 'EmployerVacancyController@edit')->name('majikan.vacancy.edit');
 
     Route::get('majikan/permohonan', 'ApplicationController@index')
-    ->name('majikan.application.index');
+        ->name('majikan.application.index');
 
     Route::get('majikan/dashboard', 'EmployerDashboardController@index')
-    ->name('majikan.dashboard');
+        ->name('majikan.dashboard');
 
+    Route::get('/admin/dashboard', 'AdminDashboardController@index')->name('admin.dashboard');
+    Route::get('/admin/majikan/kelulusan', 'AdminEmployerApprovalController@index')
+        ->name('admin.majikan.approval.index');
+
+    Route::get('/admin/majikan/kelulusan/{id}', 'AdminEmployerApprovalController@view')
+        ->name('admin.majikan.approval.view');
+
+    Route::post('/admin/majikan/kelulusan/{id}/approve', 'AdminEmployerApprovalController@approve')
+        ->name('admin.majikan.approval.approve');
+
+    Route::post('/admin/majikan/kelulusan/{id}/reject', 'AdminEmployerApprovalController@reject')
+        ->name('admin.majikan.approval.reject');
 
     //Campus
     Route::get('campus', 'CampusController@index')->name('campus');

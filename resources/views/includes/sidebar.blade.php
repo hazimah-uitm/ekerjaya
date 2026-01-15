@@ -46,8 +46,8 @@
     @endrole
 
     @hasanyrole('Superadmin|Admin')
-        <li class="{{ Request::routeIs('home') ? 'mm-active' : '' }}">
-            <a href="{{ route('home') }}">
+        <li class="{{ Request::routeIs('admin.dashboard') ? 'mm-active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}">
                 <div class="parent-icon"><i class='bx bxs-dashboard'></i></div>
                 <div class="menu-title">Dashboard</div>
             </a>
@@ -58,6 +58,15 @@
             <a href="{{ route('user') }}">
                 <div class="parent-icon"><i class='bx bx-user-circle'></i></div>
                 <div class="menu-title">Pengguna</div>
+            </a>
+        </li>
+
+        <li class="menu-label">Pengurusan Rekod</li>
+
+        <li class="{{ Request::is('admin.majikan.approval.index') ? 'mm-active' : '' }}">
+            <a href="{{ route('admin.majikan.approval.index') }}">
+                <div class="parent-icon"><i class='bx bx-group'></i></div>
+                <div class="menu-title">Permohonan Majikan</div>
             </a>
         </li>
     @endhasanyrole
